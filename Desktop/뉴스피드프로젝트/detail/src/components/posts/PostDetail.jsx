@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import styled from "styled-components";
 import { useContext } from "react";
@@ -22,7 +23,56 @@ const PostDetail = () => {
     }
   };
 
-  //수정기능
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingTitle, setEditingTitle] = useState(postCard.postTitle);
+  const [editingContent, setEditingContent] = useState(postCard.postText);
+  const [editingPhotoCard, setEditingPhotoCard] = useState(postCard.postImage);
+  const [editingTitleError, setEditingTitleError] = useState("");
+  const [editingContentError, setEditingContentError] = useState("");
+
+  //취소버튼
+  const onCencelButton = () => {
+    setIsEditing(false);
+    setEditingTitleError("");
+    setEditingContentError("");
+  };
+
+  //수정버튼
+  const onEditDone = () => {
+    // 수정사항이 없을 때의 조건을 수정
+    if (editingTitle === postCard.postTitle && editingContent === postCard.postText) {
+      setEditingTitleError("수정사항이 없습니다.");
+      setEditingContentError("수정사항이 없습니다.");
+      return; // 이후 로직 실행을 막기 위해 반환
+    } else {
+      setEditingTitleError("");
+      setEditingContentError("");
+    }
+
+    // 수정사항이 있을 때의 로직은 그대로 유지
+    const answer = window.confirm("수정하시겠습니까?");
+    if (!answer) return;
+    alert("수정되었습니다.");
+    const newCards = posts.map((item) => {
+      if (item.postId === postId) {
+        return { ...item, postTitle: editingTitle, postText: editingContent, postImage: editingPhotoCard };
+      }
+      return item;
+    });
+    setPosts(newCards);
+    setIsEditing(false);
+    setEditingTitleError("");
+    setEditingContentError("");
+  };
+
+  const handleChange = (e) => {
+    const newFiles = e.target.files[0];
+    const reader = new FileReader(newFiles);
+    reader.readAsDataURL(newFiles);
+    reader.onloadend = () => {
+      setEditingPhotoCard(reader.result);
+    };
+  };
 
   return (
     <DetailWrapper>
@@ -36,36 +86,80 @@ const PostDetail = () => {
         </LinkGoHome>
       </DetailTiTle>
       <CardListWrapper>
-        <CardListDetail>
-          <UserInfoWrapper>
-            <UserInfoAndButton>
-              <UserInfoTitle>
-                <UserImage>
-                  <img src={postCard.userProfileImage} alt="유저프로필입니다" />
-                </UserImage>
-                <UserNickName>{userNickname}</UserNickName>
-                <Date>{postCard.postDate}</Date>
-              </UserInfoTitle>
-              <EditAndDeleteWrapper>
-                <button
-                  onClick={() => {
-                    navigate("detail/write");
-                  }}
-                >
-                  수정
-                </button>
-                <button onClick={handleDelete}>삭제</button>
-              </EditAndDeleteWrapper>
-            </UserInfoAndButton>
-            <UserTitle>{postCard.postTitle}</UserTitle>
-          </UserInfoWrapper>
-          <PostListDetail>
-            <PostImageDetail>
-              <img src={postCard.postImage} alt={postCard.postImage} />
-            </PostImageDetail>
-          </PostListDetail>
-          <UserContent>{postCard.postText}</UserContent>
-        </CardListDetail>
+        {isEditing ? (
+          <CardListDetail>
+            <UserInfoWrapper>
+              <UserInfoAndButton>
+                <UserInfoTitle>
+                  <UserImage>
+                    <img src={postCard.userProfileImage} alt="유저프로필입니다" />
+                  </UserImage>
+                  <UserNickName>{userNickname}</UserNickName>
+                  <Date>{postCard.postDate}</Date>
+                </UserInfoTitle>
+
+                <EditAndDeleteWrapper>
+                  <button onClick={onCencelButton}>취소</button>
+                  <button onClick={onEditDone}>수정완료</button>
+                </EditAndDeleteWrapper>
+              </UserInfoAndButton>
+              <EditUserTitle>
+                <EditInput
+                  type="text"
+                  autoFocus
+                  defaultValue={postCard.postTitle}
+                  onChange={(e) => setEditingTitle(e.target.value)}
+                />
+                <Error>{editingTitleError}</Error>
+              </EditUserTitle>
+            </UserInfoWrapper>
+            <PostListDetail>
+              <PostImageDetail>
+                <input type="file" onChange={handleChange} />
+              </PostImageDetail>
+            </PostListDetail>
+            <EditUserContent
+              defaultValue={postCard.postText}
+              onChange={(e) => setEditingContent(e.target.value)}
+            ></EditUserContent>
+            <Error>{editingContentError}</Error>
+          </CardListDetail>
+        ) : (
+          <CardListDetail>
+            <UserInfoWrapper>
+              <UserInfoAndButton>
+                <UserInfoTitle>
+                  <UserImage>
+                    <img src={postCard.userProfileImage} alt="유저프로필입니다" />
+                  </UserImage>
+                  <UserNickName>{userNickname}</UserNickName>
+                  <Date>{postCard.postDate}</Date>
+                </UserInfoTitle>
+                <EditAndDeleteWrapper>
+                  <button
+                    onClick={() => {
+                      setIsEditing(true);
+                    }}
+                  >
+                    수정
+                  </button>
+                  <button onClick={handleDelete}>삭제</button>
+                </EditAndDeleteWrapper>
+              </UserInfoAndButton>
+              <UserTitle>{postCard.postTitle}</UserTitle>
+            </UserInfoWrapper>
+            <PostListDetail>
+              <PostImageDetail>
+                {postCard.postImage ? (
+                  <img src={postCard.postImage} alt={postCard.postImage} />
+                ) : (
+                  <img src={postCard.postImage} style={{ display: "none" }} alt="이미지 없음" />
+                )}
+              </PostImageDetail>
+            </PostListDetail>
+            <UserContent>{postCard.postText}</UserContent>
+          </CardListDetail>
+        )}
       </CardListWrapper>
     </DetailWrapper>
   );
@@ -73,29 +167,29 @@ const PostDetail = () => {
 
 export default PostDetail;
 
-export const DetailWrapper = styled.section`
+const DetailWrapper = styled.section`
   padding: 80px 40px;
 `;
 
-export const DetailTiTle = styled.p`
+const DetailTiTle = styled.p`
   text-align: right;
   margin-right: 15px;
 `;
 
-export const TiTleInfo = styled.h2`
+const TiTleInfo = styled.h2`
   font-size: 24px;
   font-weight: 700;
 `;
 
-export const CardListWrapper = styled.ul`
+const CardListWrapper = styled.ul`
   margin-top: 30px;
 `;
 
-export const LinkGoHome = styled.p`
+const LinkGoHome = styled.p`
   cursor: pointer;
 `;
 
-export const CardListDetail = styled.li`
+const CardListDetail = styled.li`
   display: flex;
   flex-direction: column;
   border: 1px solid #ccc;
@@ -109,18 +203,18 @@ export const UserInfoWrapper = styled.div`
   flex-direction: column;
 `;
 
-export const UserInfoAndButton = styled.div`
+const UserInfoAndButton = styled.div`
   display: flex;
   justify-content: space-between;
 `;
 
-export const UserInfoTitle = styled.div`
+const UserInfoTitle = styled.div`
   display: flex;
   gap: 10px;
   align-items: center;
 `;
 
-export const UserImage = styled.div`
+const UserImage = styled.div`
   width: 70px;
   height: 70px;
   & img {
@@ -131,17 +225,17 @@ export const UserImage = styled.div`
   }
 `;
 
-export const UserNickName = styled.h3`
+const UserNickName = styled.h3`
   font-weight: 700;
   font-size: 24px;
 `;
 
-export const Date = styled.time`
+const Date = styled.time`
   color: #ccc;
   font-size: 14px;
 `;
 
-export const EditAndDeleteWrapper = styled.div`
+const EditAndDeleteWrapper = styled.div`
   & > button {
     border: none;
     background-color: transparent;
@@ -151,16 +245,21 @@ export const EditAndDeleteWrapper = styled.div`
   }
 `;
 
-export const UserTitle = styled.h3`
+const UserTitle = styled.h3`
   margin-top: 10px;
   font-size: 20px;
 `;
 
-export const PostListDetail = styled.div`
+export const EditUserTitle = styled.h3`
+  margin-top: 10px;
+  font-size: 20px;
+`;
+
+const PostListDetail = styled.div`
   margin: 20px 0;
 `;
 
-export const PostImageDetail = styled.div`
+const PostImageDetail = styled.div`
   width: 100%;
   & > img {
     width: 100%;
@@ -169,6 +268,23 @@ export const PostImageDetail = styled.div`
   }
 `;
 
-export const UserContent = styled.p`
+const EditInput = styled.input`
+  width: 100%;
+  font-size: 20px;
+  padding: 5px;
+`;
+
+const UserContent = styled.p`
   line-height: 24px;
+`;
+
+const EditUserContent = styled.textarea`
+  line-height: 24px;
+  height: 300px;
+`;
+
+const Error = styled.p`
+  font-size: 14px;
+  color: red;
+  margin: 5px 0 0 3px;
 `;
