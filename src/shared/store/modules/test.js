@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 //초기값
-const initialValue = {};
+const initialState = {};
 
 //instance
 export const todoSlice = createSlice({
   name: 'todo',
-  initialValue,
+  initialState,
   reducers: {
     //actionCreator + reducer
     addTodo: (state, action) => {
