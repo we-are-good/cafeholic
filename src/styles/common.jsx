@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
-export default styled.body`
-    font-size: 16px;
+/*------------ kakao Map ----------*/
+export const kakaoMap = styled.div`
+  width: 100%;
+  height: 100vh;
 `;

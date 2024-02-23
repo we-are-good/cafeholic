@@ -65,6 +65,8 @@ const GlobalStyle = createGlobalStyle`
     textarea{
         resize: none;
     }
+
+ 
 `;
 
 export default GlobalStyle;
