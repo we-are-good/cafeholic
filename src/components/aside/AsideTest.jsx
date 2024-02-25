@@ -1,13 +1,123 @@
 import { Link, Outlet } from 'react-router-dom';
 import * as S from '../../styles/aside';
+import { useEffect } from 'react';
+import { useState } from 'react';
+// import { Map, MapMarker } from 'react-kakao-maps-sdk';
 
 const Aside = () => {
+  //장소 검색 객체 생성
+  // const ps = new kakao.maps.services.Places();
+
+  // //키워드 검색 요청 함수
+  // function searchPlaces() {
+  //   const keyword = document.getElementById('keyword').value;
+  //   if (!keyword.replace(/^\s+|\s+$/g, '')) {
+  //     alert('키워드를 입력해주세요!');
+  //     return false;
+  //   }
+  //   ps.keywordSearch(keyword, placesSearchDB);
+  // }
+
+  // function placesSearchDB(data, status) {
+  //   if (status === kakao.maps.services.Status.OK) {
+  //     console.log('data:>>', data);
+  //   } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+  //     alert('검색 결과가 존재하지 않습니다');
+  //     return;
+  //   }
+  // }
+  const [keyword, setKeyword] = useState('');
+  const [places, setPlaces] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [markers, setMarkers] = useState([]);
+
+  // 검색 버튼을 클릭했을 때 실행되는 함수
+  const handleSearch = (e) => {
+    e.preventDefault();
+    // 검색어가 비어있는 경우 알림을 표시하고 함수를 종료합니다.
+    if (!keyword.trim()) {
+      alert('검색어를 입력해주세요!');
+      return;
+    }
+    setLoading(true);
+
+    const ps = new kakao.maps.services.Places();
+
+    ps.keywordSearch(keyword, (data, status) => {
+      if (status === window.kakao.maps.services.Status.OK) {
+        setPlaces(data);
+
+        const newMarkers = data.map((place, index) => ({
+          position: new window.kakao.maps.LatLng(place.y, place.x),
+          title: place.place_name,
+          id: index
+        }));
+        setMarkers(newMarkers);
+      } else {
+        alert('검색 결과가 존재하지 않습니다.');
+        setPlaces([]);
+        setMarkers([]);
+      }
+      setLoading(false);
+    });
+  };
+
+  // useEffect(() => {
+  //   if (!keyword.trim()) return;
+
+  // }, []);
+
+  // 입력 필드의 변화를 감지하여 검색어를 업데이트하는 함수
+  // const handleInputChange = (e) => {
+  //   setKeyword(e.target.value);
+  //   console.log(keyword);
+  // };
+
   return (
     <>
       <S.Aside>
-        <Link to="/">LOGO</Link>
-        <div>검색기능</div>
-        <div>아무거나생각한대로</div>
+        <Link to="/">COFFEEHOLIC</Link>
+        <div>
+          <form onSubmit={handleSearch}>
+            <input type="text" value={keyword} onChange={(e) => setKeyword(e.target.value)} id="keyword" size="15" />
+            <button type="submit" disabled={loading}>
+              {loading ? '검색 중...' : '검색'}
+            </button>
+          </form>
+        </div>
+        <div>
+          <ul>
+            {places.map((place, index) => (
+              <li key={index}>
+                <span className={`markerbg marker_${index + 1}`}></span>
+                <div className="info">
+                  <h5>{place.place_name}</h5>
+                  {/* 도로명 주소와 지번 주소가 있는 경우 각각 출력합니다. */}
+                  {place.road_address_name && (
+                    <>
+                      <span>{place.road_address_name}</span>
+                      <span className="jibun gray">{place.address_name}</span>
+                    </>
+                  )}
+                  {/* 도로명 주소만 있는 경우 출력합니다. */}
+                  {!place.road_address_name && <span>{place.address_name}</span>}
+                  {/* 전화번호 출력 */}
+                  <span className="tel">{place.phone}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+          {/* <Map
+            style={{ width: '100%', height: '400px' }}
+            center={new window.kakao.maps.LatLng(37.566826, 126.9786567)}
+            level={3}
+          >
+            {/* 검색된 장소의 마커를 지도에 표시합니다. */}
+          {/* {markers.map((marker) => (
+            <MapMarker key={marker.id} position={marker.position} onClick={() => displayInfowindow(marker)} />
+          ))} */}
+          {/* </Map>*/}
+        </div>
       </S.Aside>
       <Outlet />
     </>
