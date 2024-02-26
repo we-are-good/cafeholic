@@ -1,13 +1,14 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import * as S from '../../styles/aside';
+import Search from '../Search';
+import Header from '../../components/common/Header';
 
 const Aside = () => {
   return (
     <>
       <S.Aside>
-        <Link to="/">LOGO</Link>
-        <div>검색기능</div>
-        <div>아무거나생각한대로</div>
+        <Header />
+        <Search />
       </S.Aside>
       <Outlet />
     </>
