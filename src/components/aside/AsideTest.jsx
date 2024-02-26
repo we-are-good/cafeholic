@@ -1,7 +1,6 @@
 import { Link, Outlet } from 'react-router-dom';
 import * as S from '../../styles/aside';
 import { useState } from 'react';
-import styled from 'styled-components';
 // import { Map, MapMarker } from 'react-kakao-maps-sdk';
 
 const Aside = () => {
