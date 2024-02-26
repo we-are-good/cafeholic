@@ -6,7 +6,7 @@ export const ArticleWrapper = styled.article`
   bottom: 40px;
   width: 288px;
   height: 132px;
-  margin-left: 144px;
+  margin-left: -144px;
   text-align: left;
   overflow: hidden;
   font-size: 12px;
@@ -22,10 +22,6 @@ export const CafeInfo = styled.header`
   border-right: 1px solid #ccc;
   overflow: hidden;
   background: #fff;
-  & :nth-child(1) {
-    border: 0;
-    box-shadow: 0px 1px 2px #888;
-  }
 `;
 
 export const CafeTitle = styled.div`
@@ -87,4 +83,5 @@ export const ImgWrapper = styled.div`
 
 export const LinkWrapper = styled.div`
   color: #5085bb;
+  cursor: pointer;
 `;

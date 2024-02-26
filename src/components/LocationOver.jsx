@@ -36,7 +36,6 @@ function LocationOver({ selectedPlace, setsSelectedPlace }) {
               <Jibun> {road_address_name} </Jibun>
               <LinkWrapper>
                 <div>{phone}</div>
-
                 <a href={place_url} target="_blank">
                   홈페이지
                 </a>
