@@ -1,7 +1,10 @@
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useState, useEffect } from 'react';
+import LocationOver from './LocationOver';
 
 const Location = () => {
+  const [selectedPlace, setsSelectedPlace] = useState([]);
+  const [totalCafeList, setTotalCafeList] = useState([]);
   const [info, setInfo] = useState();
   const [map, setMap] = useState();
   const [markers, setMarkers] = useState([]);
@@ -45,6 +48,7 @@ const Location = () => {
       '카페',
       (data, status) => {
         console.log('카페 검색 결과:', data);
+        setTotalCafeList(data);
         if (status === window.kakao.maps.services.Status.OK) {
           const bounds = new window.kakao.maps.LatLngBounds();
           let newMarkers = [];
@@ -79,6 +83,12 @@ const Location = () => {
     });
   };
 
+  const selectedPlaceHandler = (marker) => {
+    const getPlace = totalCafeList.filter((location) => location.place_name === marker.content);
+    setInfo(marker);
+    setsSelectedPlace(getPlace);
+  };
+
   return (
     <Map
       center={location.center}
@@ -91,8 +101,12 @@ const Location = () => {
       onDragEnd={handleDragEnd}
     >
       {markers.map((marker, index) => (
-        <MapMarker key={`marker-${index}`} position={marker.position} onClick={() => setInfo(marker)}>
-          {info && info.content === marker.content && <div style={{ color: '#000' }}>{marker.content}</div>}
+        <MapMarker key={`marker-${index}`} position={marker.position} onClick={() => selectedPlaceHandler(marker)}>
+          {info && info.content === marker.content && selectedPlace && (
+            <div>
+              <LocationOver selectedPlace={selectedPlace} setsSelectedPlace={setsSelectedPlace} />
+            </div>
+          )}
         </MapMarker>
       ))}
     </Map>
