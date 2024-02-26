@@ -1,13 +1,7 @@
 import Location from '../components/Location';
-import Search from '../components/Search';
 
 const Home = () => {
-  return (
-    <>
-      <Location />
-      <Search />
-    </>
-  );
+  return <Location />;
 };
 
 export default Home;
