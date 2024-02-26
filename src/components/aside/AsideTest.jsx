@@ -1,28 +1,26 @@
 import { Link, Outlet } from 'react-router-dom';
 import * as S from '../../styles/aside';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 // import { Map, MapMarker } from 'react-kakao-maps-sdk';
 
-const Aside = () => {
+const customHook = () => {
   const [keyword, setKeyword] = useState('');
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(false);
   const [map, setMap] = useState();
   const [markers, setMarkers] = useState([]);
 
-  // 검색 버튼을 클릭했을 때 실행되는 함수
-  const handleSearch = (e) => {
-    e.preventDefault();
-    // 검색어가 비어있는 경우 알림을 표시하고 함수를 종료합니다.
-    if (!keyword.trim()) {
-      alert('검색어를 입력해주세요!');
-      return;
-    }
+  const search = () => {
     setLoading(true);
 
-    const ps = new kakao.maps.services.Places();
+    if (!keyword.trim()) {
+      alert('검색어를 입력해주세요!');
+      setLoading(false);
+      return;
+    }
 
+    const ps = new kakao.maps.services.Places();
     ps.keywordSearch(keyword, (data, status) => {
       console.log('검색 후 카페 검색 결과:', data);
       if (status === window.kakao.maps.services.Status.OK) {
@@ -46,7 +44,7 @@ const Aside = () => {
           bounds.extend(new window.kakao.maps.LatLng(data[i].y, data[i].x));
         }
         setMarkers(newMarkers);
-        map.setBounds(bounds);
+        //map.setBounds(bounds);
         console.log('검색 시 설정된 마커:', newMarkers);
       } else {
         alert('검색 결과가 존재하지 않습니다.');
@@ -55,6 +53,17 @@ const Aside = () => {
       }
       setLoading(false);
     });
+  };
+  return { keyword, setKeyword, places, loading, search };
+};
+
+const Aside = () => {
+  const { keyword, setKeyword, places, loading, search } = customHook(); // 커스텀 훅 사용
+
+  // 검색 버튼을 클릭했을 때 실행되는 함수
+  const handleSearch = (e) => {
+    e.preventDefault();
+    search();
   };
 
   return (
