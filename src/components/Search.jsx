@@ -1,7 +1,6 @@
 const Search = () => {
-  return (
-    <div>Search</div>
-  )
-}
+  
+  return <div></div>;
+};
 
-export default Search
+export default Search;
