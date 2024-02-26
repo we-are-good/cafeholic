@@ -84,9 +84,7 @@ const Location = () => {
   };
 
   const selectedPlaceHandler = (marker) => {
-    console.log(markers);
     const getPlace = totalCafeList.filter((location) => location.place_name === marker.content);
-    console.log(getPlace);
     setInfo(marker);
     setsSelectedPlace(getPlace);
   };
