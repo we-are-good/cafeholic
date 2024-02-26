@@ -23,7 +23,7 @@ const Aside = () => {
     const ps = new kakao.maps.services.Places();
 
     ps.keywordSearch(keyword, (data, status) => {
-      console.log('검색 후 카페 검색 결과:', data);
+      console.log('검색 후 카페 검색 결과1:', data);
       if (status === window.kakao.maps.services.Status.OK) {
         const bounds = new window.kakao.maps.LatLngBounds();
         setPlaces(data);

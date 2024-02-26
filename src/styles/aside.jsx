@@ -9,7 +9,7 @@ export const Aside = styled.aside`
   background-color: #fff;
   z-index: 999;
   border-right: 1px solid #ddd;
-  &::after {
+  /* &::after {
     content: '';
     width: 40px;
     height: 50px;
@@ -20,5 +20,5 @@ export const Aside = styled.aside`
     transform: translateY(50vh);
     cursor: pointer;
     border-radius: 5px;
-  }
+  } */
 `;

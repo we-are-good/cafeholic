@@ -1,7 +1,23 @@
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addResults } from '../shared/store/modules/list';
+import LocationOver from './LocationOver';
+// import { connection } from '../shared/store/modules/listConnection';
 
 const Location = () => {
+  const dispatch = useDispatch();
+
+  //검색기능
+  const search = useSelector((state) => state.search);
+  console.log(search);
+
+  //카드 리스트 연결
+  const selector = useSelector((state) => state.connection);
+  console.log(selector);
+
+  const [selectedPlace, setsSelectedPlace] = useState([]);
+  const [totalCafeList, setTotalCafeList] = useState([]);
   const [info, setInfo] = useState();
   const [map, setMap] = useState();
   const [markers, setMarkers] = useState([]);
@@ -45,6 +61,8 @@ const Location = () => {
       '카페',
       (data, status) => {
         console.log('카페 검색 결과:', data);
+        dispatch(addResults(data));
+        // setTotalCafeList(data);
         if (status === window.kakao.maps.services.Status.OK) {
           const bounds = new window.kakao.maps.LatLngBounds();
           let newMarkers = [];
@@ -55,7 +73,10 @@ const Location = () => {
                 lat: data[i].y,
                 lng: data[i].x
               },
-              content: data[i].place_name
+              content: data[i].place_name,
+              address: data[i].address_name,
+              id: data[i].id,
+              phone: data[i].phone
             });
             bounds.extend(new window.kakao.maps.LatLng(data[i].y, data[i].x));
           }
@@ -72,11 +93,18 @@ const Location = () => {
     );
   }, [map, location.center.lat, location.center.lng]);
 
+  //지도 드래그시 마커 변경
   const handleDragEnd = () => {
     const center = map.getCenter();
     setLocation({
       center: { lat: center.getLat(), lng: center.getLng() }
     });
+  };
+
+  const selectedPlaceHandler = (marker) => {
+    const getPlace = totalCafeList.filter((location) => location.place_name === marker.content);
+    setInfo(marker);
+    setsSelectedPlace(getPlace);
   };
 
   return (
@@ -91,8 +119,12 @@ const Location = () => {
       onDragEnd={handleDragEnd}
     >
       {markers.map((marker, index) => (
-        <MapMarker key={`marker-${index}`} position={marker.position} onClick={() => setInfo(marker)}>
-          {info && info.content === marker.content && <div style={{ color: '#000' }}>{marker.content}</div>}
+        <MapMarker key={`marker-${index}`} position={marker.position} onClick={() => selectedPlaceHandler(marker)}>
+          {info && info.content === marker.content && selectedPlace && (
+            <div>
+              <LocationOver selectedPlace={selectedPlace} setsSelectedPlace={setsSelectedPlace} />
+            </div>
+          )}
         </MapMarker>
       ))}
     </Map>
