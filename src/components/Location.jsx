@@ -1,4 +1,4 @@
-import { CustomOverlayMap, Map, MapMarker } from 'react-kakao-maps-sdk';
+import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addResults } from '../shared/store/modules/list';
