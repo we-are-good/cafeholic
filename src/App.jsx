@@ -1,12 +1,13 @@
-import { Provider } from 'react-redux';
 import Router from './shared/Router';
-import store from './shared/store/config/configStore';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient()
 
 const App = () => {
   return (
-    <Provider store={store}>
+    <QueryClientProvider client={queryClient}>
       <Router />
-    </Provider>
+    </QueryClientProvider>
   );
 };
 
