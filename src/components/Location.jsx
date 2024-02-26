@@ -15,9 +15,9 @@ const Location = () => {
   //카드 리스트 연결
   const selector = useSelector((state) => state.connection);
   console.log('selector', selector);
+  const totalCafeList = useSelector((state) => state.list);
 
   const [selectedPlace, setSelectedPlace] = useState([]);
-  const [totalCafeList, setTotalCafeList] = useState([]);
   const [info, setInfo] = useState();
   const [map, setMap] = useState();
   const [markers, setMarkers] = useState([]);
@@ -63,7 +63,6 @@ const Location = () => {
         console.log('카페 검색 결과:', data);
         dispatch(addResults(data));
 
-        setTotalCafeList(data);
         if (status === window.kakao.maps.services.Status.OK) {
           const bounds = new window.kakao.maps.LatLngBounds();
           let newMarkers = [];
