@@ -10,13 +10,13 @@ const Location = () => {
 
   //검색기능
   const search = useSelector((state) => state.search);
-  console.log(search);
+  console.log('search', search);
 
   //카드 리스트 연결
   const selector = useSelector((state) => state.connection);
-  console.log(selector);
+  console.log('selector', selector);
 
-  const [selectedPlace, setsSelectedPlace] = useState([]);
+  const [selectedPlace, setSelectedPlace] = useState([]);
   const [totalCafeList, setTotalCafeList] = useState([]);
   const [info, setInfo] = useState();
   const [map, setMap] = useState();
@@ -62,7 +62,8 @@ const Location = () => {
       (data, status) => {
         console.log('카페 검색 결과:', data);
         dispatch(addResults(data));
-        // setTotalCafeList(data);
+
+        setTotalCafeList(data);
         if (status === window.kakao.maps.services.Status.OK) {
           const bounds = new window.kakao.maps.LatLngBounds();
           let newMarkers = [];
@@ -104,7 +105,7 @@ const Location = () => {
   const selectedPlaceHandler = (marker) => {
     const getPlace = totalCafeList.filter((location) => location.place_name === marker.content);
     setInfo(marker);
-    setsSelectedPlace(getPlace);
+    setSelectedPlace(getPlace);
   };
 
   return (
@@ -122,7 +123,7 @@ const Location = () => {
         <MapMarker key={`marker-${index}`} position={marker.position} onClick={() => selectedPlaceHandler(marker)}>
           {info && info.content === marker.content && selectedPlace && (
             <div>
-              <LocationOver selectedPlace={selectedPlace} setsSelectedPlace={setsSelectedPlace} />
+              <LocationOver selectedPlace={selectedPlace} setSelectedPlace={setSelectedPlace} />
             </div>
           )}
         </MapMarker>

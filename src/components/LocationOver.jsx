@@ -11,13 +11,13 @@ import {
   LinkWrapper
 } from '../styles/LocationOverStyle';
 
-function LocationOver({ selectedPlace, setsSelectedPlace }) {
+function LocationOver({ selectedPlace, setSelectedPlace }) {
   const { place_name, place_url, address_name, road_address_name, phone } = selectedPlace[0];
   console.log(selectedPlace);
 
   // 커스텀 오버레이를 닫기 위해 호출되는 함수입니다
   const closeOverlay = () => {
-    setsSelectedPlace('');
+    setSelectedPlace('');
   };
   return (
     <>

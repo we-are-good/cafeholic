@@ -41,6 +41,8 @@ export const CloseButton = styled.button`
   width: 17px;
   height: 17px;
   background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
+  background-position: center;
+
   & :hover {
     cursor: pointer;
   }
