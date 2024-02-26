@@ -1,17 +1,19 @@
 import { Link, Outlet } from 'react-router-dom';
 import * as S from '../../styles/aside';
-import SearchCustomHook from './SearchCustomHook';
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-// import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import useSearchHook from './SearchCustomHook';
+import { useDispatch } from 'react-redux';
+import { changeSearchText } from '../../shared/store/modules/search';
+
+import { Map, MapMarker } from 'react-kakao-maps-sdk';
 
 const Aside = () => {
-  const { keyword, setKeyword, places, loading, search } = SearchCustomHook(); // 커스텀 훅 사용
+  const dispatch = useDispatch();
+  const { keyword, setKeyword, places, loading, search } = useSearchHook(); // 커스텀 훅 사용
 
   // 검색 버튼을 클릭했을 때 실행되는 함수
-  const handleSearch = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    search();
+    dispatch(changeSearchText(search()));
   };
 
   return (
@@ -19,11 +21,9 @@ const Aside = () => {
       <S.Aside>
         <Link to="/">COFFEEHOLIC</Link>
         <div>
-          <form onSubmit={handleSearch}>
+          <form onSubmit={handleSubmit}>
             <input type="text" value={keyword} onChange={(e) => setKeyword(e.target.value)} id="keyword" size="15" />
-            <button type="submit" disabled={loading}>
-              {loading ? '검색 중...' : '검색'}
-            </button>
+            <button type="submit">검색</button>
           </form>
         </div>
         <div>
@@ -57,7 +57,7 @@ const Aside = () => {
             level={3}
           > */}
           {/* 검색된 장소의 마커를 지도에 표시합니다. */}
-          {/* {markers.map((marker) => (
+          {/* {places.map((marker) => (
               <MapMarker key={marker.id} position={marker.position} onClick={() => displayInfowindow(marker)} />
             ))}
           </Map> */}
