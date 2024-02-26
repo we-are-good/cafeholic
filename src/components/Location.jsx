@@ -1,4 +1,4 @@
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import { CustomOverlayMap, Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addResults } from '../shared/store/modules/list';
@@ -122,9 +122,7 @@ const Location = () => {
       {markers.map((marker, index) => (
         <MapMarker key={`marker-${index}`} position={marker.position} onClick={() => selectedPlaceHandler(marker)}>
           {info && info.content === marker.content && selectedPlace && (
-            <div>
-              <LocationOver selectedPlace={selectedPlace} setSelectedPlace={setSelectedPlace} />
-            </div>
+            <div>{<LocationOver selectedPlace={selectedPlace} setSelectedPlace={setSelectedPlace} />}</div>
           )}
         </MapMarker>
       ))}
