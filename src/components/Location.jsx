@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addResults } from '../shared/store/modules/list';
 import LocationOver from './LocationOver';
-import { getmaptotalcafe } from './cafelist/CafeList';
 // import { connection } from '../shared/store/modules/listConnection';
 
 const Location = () => {
