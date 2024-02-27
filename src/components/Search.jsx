@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { changeSearchText } from '../shared/store/modules/search';
 import { useSearchParams } from 'react-router-dom';
 import * as S from '../styles/common';
+import { connection } from '../shared/store/modules/listConnection';
 
 const Search = () => {
   const dispatch = useDispatch();
@@ -10,8 +11,8 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const keyword = searchParams.get('keyword');
-  console.log(keyword);
+  // const keyword = searchParams.get('keyword');
+  // console.log(keyword);
 
   const searchText = useSelector((state) => state.search.searchText);
 
@@ -26,6 +27,17 @@ const Search = () => {
   const handleSearch = (e) => {
     e.preventDefault();
   };
+
+  const handleClickCard = (place) => {
+    dispatch(
+      connection({
+        name: place.place_name,
+        isClick: true,
+        id: place.id
+      })
+    );
+  };
+
   return (
     <>
       <S.SearchDiv>
@@ -46,7 +58,12 @@ const Search = () => {
       <S.ListDiv>
         <S.ListUl>
           {searchResults.map((place, index) => (
-            <S.ListLi key={index}>
+            <S.ListLi
+              key={index}
+              onClick={() => {
+                handleClickCard(place);
+              }}
+            >
               <span className={`markerbg marker_${index + 1}`}></span>
               <S.PlaceDiv className="info">
                 <S.PlaceName>{place.place_name}</S.PlaceName>
@@ -63,7 +80,7 @@ const Search = () => {
                 {/* 도로명 주소만 있는 경우 출력합니다. */}
                 {!place.road_address_name && <span>{place.address_name}</span>}
                 {/* 전화번호 출력 */}
-                <span className="tel">{`☎️ ${place.phone}`}</span>
+                <S.PlaceTel>{`☎ ${place.phone}`}</S.PlaceTel>
               </S.PlaceDiv>
             </S.ListLi>
           ))}
