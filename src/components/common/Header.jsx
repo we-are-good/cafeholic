@@ -1,11 +1,14 @@
-import { Link } from 'react-router-dom';
 import * as S from '../../styles/common';
+import Logo from '../assets/images/logo.png';
 
 const Header = () => {
   return (
-    <Link to="/">
-      <S.Logo>Coffee Holic</S.Logo>
-    </Link>
+    <S.LogoLink to="/">
+      <S.Logo>
+        <S.LogoImage src={Logo} />
+        <span>COFFEE HOLIC</span>
+      </S.Logo>
+    </S.LogoLink>
   );
 };
 
