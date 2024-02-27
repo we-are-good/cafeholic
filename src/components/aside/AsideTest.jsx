@@ -1,11 +1,15 @@
 import { Link, Outlet } from 'react-router-dom';
 import * as S from '../../styles/aside';
 import { useState } from 'react';
-import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeSearchText } from '../../shared/store/modules/search';
 // import { Map, MapMarker } from 'react-kakao-maps-sdk';
+const CAFE_GROUP_CODE = "CE7"
+
 
 const Aside = () => {
-  const [keyword, setKeyword] = useState('');
+  const dispatch = useDispatch();
+  const keyword = useSelector((state) => state.search);
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(false);
   const [map, setMap] = useState();
@@ -21,19 +25,24 @@ const Aside = () => {
     }
     setLoading(true);
 
-    const ps = new kakao.maps.services.Places();
+    const ps = new window.kakao.maps.services.Places();
 
     ps.keywordSearch(keyword, (data, status) => {
-      console.log('검색 후 카페 검색 결과:', data);
       if (status === window.kakao.maps.services.Status.OK) {
         const bounds = new window.kakao.maps.LatLngBounds();
-        setPlaces(data);
 
-        const newMarkers = data.map((place, index) => ({
+        const filtereData = data.filter(
+          (place) => place.place_name.includes(keyword) && place.category_group_code === CAFE_GROUP_CODE
+        );
+
+        setPlaces(filtereData);
+        console.log('검색 후 카페 검색 결과:', filtereData);
+
+        const newMarkers = filtereData.map((place, index) => ({
           position: new window.kakao.maps.LatLng(place.y, place.x),
           title: place.place_name,
           id: index
-        }));
+        })); 
 
         for (var i = 0; i < Math.min(15, data.length); i++) {
           newMarkers.push({
@@ -47,14 +56,20 @@ const Aside = () => {
         }
         setMarkers(newMarkers);
         map.setBounds(bounds);
+
         console.log('검색 시 설정된 마커:', newMarkers);
+        dispatch(changeSearchText(keyword));
       } else {
         alert('검색 결과가 존재하지 않습니다.');
         setPlaces([]);
         setMarkers([]);
       }
-      setLoading(false);
     });
+    setLoading(false);
+  };
+
+  const handleKeywordChange = (e) => {
+    dispatch(changeSearchText(e.target.value));
   };
 
   return (
@@ -63,7 +78,7 @@ const Aside = () => {
         <Link to="/">COFFEEHOLIC</Link>
         <div>
           <form onSubmit={handleSearch}>
-            <input type="text" value={keyword} onChange={(e) => setKeyword(e.target.value)} id="keyword" size="15" />
+            <input type="text" value={keyword} onChange={handleKeywordChange} id="keyword" size="15" />
             <button type="submit" disabled={loading}>
               {loading ? '검색 중...' : '검색'}
             </button>
@@ -94,16 +109,6 @@ const Aside = () => {
               </li>
             ))}
           </ul>
-          {/* <Map
-            style={{ width: '100%', height: '400px' }}
-            center={new window.kakao.maps.LatLng(37.566826, 126.9786567)}
-            level={3}
-          > */}
-          {/* 검색된 장소의 마커를 지도에 표시합니다. */}
-          {/* {markers.map((marker) => (
-              <MapMarker key={marker.id} position={marker.position} onClick={() => displayInfowindow(marker)} />
-            ))}
-          </Map> */}
         </div>
       </S.Aside>
       <Outlet />
