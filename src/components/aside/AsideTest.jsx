@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeSearchText } from '../../shared/store/modules/search';
 // import { Map, MapMarker } from 'react-kakao-maps-sdk';
+const CAFE_GROUP_CODE = "CE7"
+
 
 const Aside = () => {
   const dispatch = useDispatch();
@@ -30,7 +32,7 @@ const Aside = () => {
         const bounds = new window.kakao.maps.LatLngBounds();
 
         const filtereData = data.filter(
-          (place) => place.category_group_code === 'CE7' && place.place_name.includes(keyword)
+          (place) => place.place_name.includes(keyword) && place.category_group_code === CAFE_GROUP_CODE
         );
 
         setPlaces(filtereData);
@@ -40,7 +42,7 @@ const Aside = () => {
           position: new window.kakao.maps.LatLng(place.y, place.x),
           title: place.place_name,
           id: index
-        }));
+        })); 
 
         for (var i = 0; i < Math.min(15, data.length); i++) {
           newMarkers.push({
@@ -62,8 +64,8 @@ const Aside = () => {
         setPlaces([]);
         setMarkers([]);
       }
-      setLoading(false);
     });
+    setLoading(false);
   };
 
   const handleKeywordChange = (e) => {

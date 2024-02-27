@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const searchSlice = createSlice({
-  name: 'keyword',
+  name: 'search',
   initialState: '',
   reducers: {
     changeSearchText: (state, action) => {
