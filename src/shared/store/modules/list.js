@@ -5,7 +5,8 @@ const resultLists = createSlice({
   initialState: [],
   reducers: {
     addResults: (state, action) => {
-      return (state = action.payload);
+      console.log('action.payload', action.payload);
+      state = action.payload;
     }
   }
 });

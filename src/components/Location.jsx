@@ -3,41 +3,56 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addResults } from '../shared/store/modules/list';
 import LocationOver from './LocationOver';
+import { changeLocation, containSearchResults } from '../shared/store/modules/search';
 // import { connection } from '../shared/store/modules/listConnection';
 
 const Location = () => {
   const dispatch = useDispatch();
 
+  const searchResults = useSelector((state) => state.search.searchResults);
+  console.log('searchResults', searchResults);
+
   //검색기능
   const search = useSelector((state) => state.search);
   console.log('search', search);
 
-  //카드 리스트 연결
-  const selector = useSelector((state) => state.connection);
-  console.log('selector', selector);
-  const totalCafeList = useSelector((state) => state.list);
+  const location = useSelector((state) => state.search.location);
+
+  const searchText = useSelector((state) => state.search.searchText);
+
+  // //카드 리스트 연결
+  // const selector = useSelector((state) => state.connection);
+  // console.log('selector', selector);
+
+  const totalCafeList = useSelector((state) => state.search);
 
   const [selectedPlace, setSelectedPlace] = useState([]);
   const [info, setInfo] = useState();
   const [map, setMap] = useState();
   const [markers, setMarkers] = useState([]);
-  const [location, setLocation] = useState({
-    center: {
-      lat: 37.566826,
-      lng: 126.9786567
-    },
-    errMsg: null
-  });
+  // const [location, setLocation] = useState({
+  //   center: {
+  //     lat: 37.566826,
+  //     lng: 126.9786567
+  //   },
+  //   errMsg: null
+  // });
 
   useEffect(() => {
-    if (navigator.geolocation) {
-      const watchId = navigator.geolocation.watchPosition(
+    if (window.navigator.geolocation) {
+      const watchId = window.navigator.geolocation.watchPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setLocation((prev) => ({
-            ...prev,
-            center: { lat: latitude, lng: longitude }
-          }));
+          // setLocation((prev) => ({
+          //   ...prev,
+          //   center: { lat: latitude, lng: longitude }
+          // }));
+          dispatch(
+            changeLocation({
+              lat: latitude,
+              lng: longitude
+            })
+          );
         },
         (err) => {
           console.log(err.message);
@@ -45,7 +60,7 @@ const Location = () => {
       );
 
       return () => {
-        navigator.geolocation.clearWatch(watchId);
+        window.navigator.geolocation.clearWatch(watchId);
       };
     } else {
       console.log('Geolocation을 지원하지 않습니다.');
@@ -53,15 +68,18 @@ const Location = () => {
   }, []);
 
   useEffect(() => {
-    if (!map || !location.center.lat || !location.center.lng) return;
+    if (!map || !location.lat || !location.lng) return;
 
     const ps = new window.kakao.maps.services.Places();
 
     ps.keywordSearch(
-      '카페',
+      searchText,
       (data, status) => {
         console.log('카페 검색 결과:', data);
-        dispatch(addResults(data));
+        if (!Array.isArray(data)) {
+          return;
+        }
+        dispatch(containSearchResults(data));
 
         if (status === window.kakao.maps.services.Status.OK) {
           const bounds = new window.kakao.maps.LatLngBounds();
@@ -87,19 +105,22 @@ const Location = () => {
           console.log('설정된 마커:', newMarkers);
         }
       },
-      {
-        location: new window.kakao.maps.LatLng(location.center.lat, location.center.lng),
-        radius: 1000
-      }
+      { category_group_code: 'CE7', location: new window.kakao.maps.LatLng(location.lat, location.lng), radius: 1000 }
     );
-  }, [map, location.center.lat, location.center.lng]);
+  }, [searchText, map, location.lat, location.lng]);
 
   //지도 드래그시 마커 변경
   const handleDragEnd = () => {
     const center = map.getCenter();
-    setLocation({
-      center: { lat: center.getLat(), lng: center.getLng() }
-    });
+    // setLocation({
+    //   center: { lat: center.getLat(), lng: center.getLng() }
+    // });
+    dispatch(
+      changeLocation({
+        lat: center.getLat(),
+        lng: center.getLng()
+      })
+    );
   };
 
   const selectedPlaceHandler = (marker) => {
@@ -108,9 +129,10 @@ const Location = () => {
     setSelectedPlace(getPlace);
   };
 
+  console.log('totalCafeList', totalCafeList);
   return (
     <Map
-      center={location.center}
+      center={location}
       style={{
         width: '100%',
         height: '100vh'
