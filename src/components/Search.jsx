@@ -80,7 +80,8 @@ const Search = () => {
                 {/* 도로명 주소만 있는 경우 출력합니다. */}
                 {!place.road_address_name && <span>{place.address_name}</span>}
                 {/* 전화번호 출력 */}
-                <S.PlaceTel>{`☎ ${place.phone}`}</S.PlaceTel>
+                {place.phone ? <S.PlaceTel>{`☎ ${place.phone}`}</S.PlaceTel> : null}
+                {/* <S.PlaceTel>{`☎ ${place.phone}`}</S.PlaceTel> */}
               </S.PlaceDiv>
             </S.ListLi>
           ))}
