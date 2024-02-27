@@ -124,7 +124,7 @@ const Location = () => {
   };
 
   const selectedPlaceHandler = (marker) => {
-    const getPlace = totalCafeList.filter((location) => location.place_name === marker.content);
+    const getPlace = searchResults.filter((location) => location.place_name === marker.content);
     setInfo(marker);
     setSelectedPlace(getPlace);
   };
