@@ -1,5 +1,7 @@
-import React from 'react';
+import { setSearchResults } from '../../shared/store/modules/search';
+import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 const useSearchHook = () => {
   const [keyword, setKeyword] = useState('');
@@ -7,6 +9,7 @@ const useSearchHook = () => {
   const [loading, setLoading] = useState(false);
   const [map, setMap] = useState();
   const [marker, setMarkers] = useState();
+  const dispatch = useDispatch();
 
   const search = () => {
     setLoading(true);
@@ -20,6 +23,7 @@ const useSearchHook = () => {
     const ps = new kakao.maps.services.Places();
     ps.keywordSearch(keyword, (data, status) => {
       console.log('검색 후 카페 검색 결과:', data);
+
       if (status === window.kakao.maps.services.Status.OK) {
         const bounds = new window.kakao.maps.LatLngBounds();
 
@@ -48,6 +52,7 @@ const useSearchHook = () => {
         setMarkers(newMarkers);
         map.setBounds(bounds);
         console.log('검색 시 설정된 마커:', newMarkers);
+        dispatch(setSearchResults(filteredData));
       } else {
         alert('검색 결과가 존재하지 않습니다.');
         setPlaces([]);

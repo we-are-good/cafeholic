@@ -1,19 +1,21 @@
 import { Link, Outlet } from 'react-router-dom';
 import * as S from '../../styles/aside';
 import useSearchHook from './SearchCustomHook';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { changeSearchText } from '../../shared/store/modules/search';
 
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 
 const Aside = () => {
   const dispatch = useDispatch();
-  const { keyword, setKeyword, places, loading, search } = useSearchHook(); // 커스텀 훅 사용
+  const searchResults = useSelector((state) => state.search.searchResults);
+  const { keyword, setKeyword, places, search } = useSearchHook(); // 커스텀 훅 사용
 
   // 검색 버튼을 클릭했을 때 실행되는 함수
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(changeSearchText(search()));
+    dispatch(changeSearchText(keyword)); // 검색어를 전역 상태로 업데이트
+    search(); //
   };
 
   return (
@@ -28,25 +30,25 @@ const Aside = () => {
         </div>
         <div>
           <ul>
-            {places.map((place, index) => (
+            {places.map((places, index) => (
               <li key={index}>
                 <span className={`markerbg marker_${index + 1}`}></span>
                 <div className="info">
-                  <h5>{place.place_name}</h5>
+                  <h5>{places.place_name}</h5>
                   {/* 도로명 주소와 지번 주소가 있는 경우 각각 출력합니다. */}
                   <p>
-                    {place.road_address_name && (
+                    {places.road_address_name && (
                       <>
-                        <span>{place.road_address_name}</span>
+                        <span>{places.road_address_name}</span>
                         <br />
-                        <span className="jibun gray">{`(${place.address_name})`}</span>
+                        <span className="jibun gray">{`(${places.address_name})`}</span>
                       </>
                     )}
                   </p>
                   {/* 도로명 주소만 있는 경우 출력합니다. */}
-                  {!place.road_address_name && <span>{place.address_name}</span>}
+                  {!places.road_address_name && <span>{places.address_name}</span>}
                   {/* 전화번호 출력 */}
-                  <span className="tel">{place.phone}</span>
+                  <span className="tel">{places.phone}</span>
                 </div>
               </li>
             ))}

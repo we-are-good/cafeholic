@@ -61,7 +61,7 @@ const Location = () => {
       '카페',
       (data, status) => {
         console.log('카페 검색 결과:', data);
-        dispatch(addResults(data));
+        dispatch(addResults(results));
         // setTotalCafeList(data);
         if (status === window.kakao.maps.services.Status.OK) {
           const bounds = new window.kakao.maps.LatLngBounds();
