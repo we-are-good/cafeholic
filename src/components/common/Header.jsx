@@ -1,14 +1,14 @@
 import * as S from '../../styles/common';
-import Logo from '../assets/images/logo.png';
+import LogoImage from '../assets/images/logo.png';
 
 const Header = () => {
   return (
-    <S.LogoLink to="/">
-      <S.Logo>
-        <S.LogoImage src={Logo} />
-        <span>COFFEE HOLIC</span>
-      </S.Logo>
-    </S.LogoLink>
+    <S.Logo>
+      <S.LogoLink to="/">
+        <img src={LogoImage} alt="COFFEE HOLIC" />
+        COFFEE HOLIC
+      </S.LogoLink>
+    </S.Logo>
   );
 };
 

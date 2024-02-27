@@ -46,25 +46,25 @@ export const MapMarkerStyle = styled.div`
 `;
 
 /*------------ Header ----------*/
-export const LogoLink = styled(Link)`
-  text-decoration: none;
-  color: black;
-  width: 100%;
-  display: block;
-`;
-
-export const LogoImage = styled.image`
-  width: 16px;
-  height: 16px;
-`;
 export const Logo = styled.h1`
   margin: 20px;
-
   text-align: left;
   text-decoration: none;
   font-size: 22px;
   margin-left: 25px;
   font-weight: 600;
+`;
+
+export const LogoLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  & > img {
+    width: 35px;
+    height: 35px;
+  }
 `;
 
 /*------------ SearchInput ----------*/
