@@ -6,7 +6,6 @@ import {
   CafeTitle,
   CloseButton,
   Ellipsis,
-  ImgWrapper,
   Jibun,
   LinkWrapper
 } from '../styles/LocationOverStyle';
@@ -29,8 +28,6 @@ function LocationOver({ selectedPlace, setSelectedPlace }) {
           </CafeTitle>
 
           <BodyWrapper>
-            {/* <ImgWrapper>{/* <img src="null" width="73" height="70"> </ImgWrapper> */}
-
             <CafeAddressInfo>
               <Ellipsis> {address_name} </Ellipsis>
               <Jibun> {road_address_name} </Jibun>
