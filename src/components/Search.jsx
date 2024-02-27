@@ -1,10 +1,7 @@
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeSearchText, containSearchResults } from '../shared/store/modules/search';
 import { useSearchParams } from 'react-router-dom';
-import LocationOver from './LocationOver';
-import { changeLocation } from '../shared/store/modules/search';
+import { changeSearchText } from '../shared/store/modules/search';
 
 const CAFE_GROUP_CODE = 'CE7';
 
