@@ -20,10 +20,11 @@ const Location = () => {
 
   const searchText = useSelector((state) => state.search.searchText);
 
-  //카드 리스트 연결
-  const selector = useSelector((state) => state.connection);
-  console.log('selector', selector);
-  const totalCafeList = useSelector((state) => state.list);
+  // //카드 리스트 연결
+  // const selector = useSelector((state) => state.connection);
+  // console.log('selector', selector);
+
+  const totalCafeList = useSelector((state) => state.search);
 
   const [selectedPlace, setSelectedPlace] = useState([]);
   const [info, setInfo] = useState();
