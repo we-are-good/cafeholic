@@ -6,6 +6,8 @@ import { useSearchParams } from 'react-router-dom';
 import LocationOver from './LocationOver';
 import { changeLocation } from '../shared/store/modules/search';
 
+const CAFE_GROUP_CODE = 'CE7';
+
 const Search = () => {
   const dispatch = useDispatch();
 
@@ -25,39 +27,6 @@ const Search = () => {
   const searchResults = useSelector((state) => state.search.searchResults);
 
   const { kakao } = window;
-
-  // useEffect(() => {
-  // const handleSearch = (e) => {
-  //   e.preventDefault();
-  //   if (!searchText.trim()) {
-  //     alert('검색어를 입력해주세요!');
-  //     return;
-  //   }
-  //   setLoading(true);
-
-  //   setSearchParams({ keyword: searchText });
-
-  //   const ps = new kakao.maps.services.Places();
-
-  //   ps.keywordSearch(
-  //     searchText,
-  //     (data, status) => {
-  //       if (status === kakao.maps.services.Status.OK) {
-  //         setPlaces(data);
-  //         console.log('검색 후 결과 :', data);
-  //         //dispatch(containSearchResults([...data]));
-  //       } else {
-  //         alert('검색 결과가 존재하지 않습니다.');
-  //         setPlaces([]);
-  //       }
-  //     },
-  //     { category_group_code: 'CE7' },
-  //     { location: new window.kakao.maps.LatLng(location.lat, location.lng), radius: 1000 }
-  //   );
-
-  //   setLoading(false);
-  // };
-  // }, [map, location.lat, location.lng]);
 
   const handleKeywordChange = (e) => {
     dispatch(changeSearchText(e.target.value));
