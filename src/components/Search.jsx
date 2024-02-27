@@ -1,54 +1,52 @@
-import { useState } from 'react';
+import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeSearchText } from '../shared/store/modules/search';
+import { changeSearchText, containSearchResults } from '../shared/store/modules/search';
 import { useSearchParams } from 'react-router-dom';
+import LocationOver from './LocationOver';
+import { changeLocation } from '../shared/store/modules/search';
 
-const CAFE_GROUP_CODE = "CE7"
+const CAFE_GROUP_CODE = 'CE7';
 
 const Search = () => {
   const dispatch = useDispatch();
-  const search = useSelector((state) => state.search);
+
   const [loading, setLoading] = useState(false);
-  const [places, setPlaces] = useState([]);
-  const [searchParams, setSearchParams] = useSearchParams()
-  const keyword = searchParams.get("keyword")
-  console.log(keyword)
+  //const [places, setPlaces] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [map, setMap] = useState();
+  const [markers, setMarkers] = useState([]);
+
+  const keyword = searchParams.get('keyword');
+  console.log(keyword);
+
+  const location = useSelector((state) => state.search.location);
+
+  const searchText = useSelector((state) => state.search.searchText);
+
+  const searchResults = useSelector((state) => state.search.searchResults);
 
   const { kakao } = window;
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (!search.trim()) {
-      alert('검색어를 입력해주세요!');
-      return;
-    }
-    setLoading(true);
-
-    setSearchParams({keyword:search})
-
-    const ps = new kakao.maps.services.Places();
-
-    ps.keywordSearch(search, (data, status) => {
-      if (status === kakao.maps.services.Status.OK) {
-        setPlaces(data);
-        console.log('검색 후 결과 :', data);
-      } else {
-        alert('검색 결과가 존재하지 않습니다.');
-        setPlaces([]);
-      }
-    }, {category_group_code: CAFE_GROUP_CODE});
-    setLoading(false);
-  };
 
   const handleKeywordChange = (e) => {
     dispatch(changeSearchText(e.target.value));
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+  };
   return (
     <>
       <div>
         <form onSubmit={handleSearch}>
-          <input type="text" value={search} onChange={handleKeywordChange} id="keyword" size="15" />
+          <input
+            type="text"
+            value={searchText}
+            onChange={handleKeywordChange}
+            id="keyword"
+            size="15"
+            placeholder="검색어를 입력하세요."
+          />
           <button type="submit" disabled={loading}>
             {loading ? '검색 중...' : '검색'}
           </button>
@@ -56,7 +54,7 @@ const Search = () => {
       </div>
       <div>
         <ul>
-          {places.map((place, index) => (
+          {searchResults.map((place, index) => (
             <li key={index}>
               <span className={`markerbg marker_${index + 1}`}></span>
               <div className="info">
