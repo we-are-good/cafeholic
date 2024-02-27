@@ -1,4 +1,5 @@
-import Aside from '../components/aside/AsideTest';
+import Aside from '../components/aside/Aside';
+
 import Home from '../pages/Home';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
