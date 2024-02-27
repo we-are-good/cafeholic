@@ -3,10 +3,10 @@ import styled from 'styled-components';
 export const ArticleWrapper = styled.article`
   position: absolute;
   left: 0;
-  bottom: 40px;
+  bottom: -40px;
   width: 288px;
   height: 132px;
-  margin-left: -144px;
+  margin-left: -10px;
   text-align: left;
   overflow: hidden;
   font-size: 12px;
@@ -41,6 +41,8 @@ export const CloseButton = styled.button`
   width: 17px;
   height: 17px;
   background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
+  background-position: center;
+
   & :hover {
     cursor: pointer;
   }
