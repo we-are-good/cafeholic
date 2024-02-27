@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { changeSearchText } from '../shared/store/modules/search';
 import { useSearchParams } from 'react-router-dom';
 
+const CAFE_GROUP_CODE = "CE7"
+
 const Search = () => {
   const dispatch = useDispatch();
   const search = useSelector((state) => state.search);
@@ -34,7 +36,7 @@ const Search = () => {
         alert('검색 결과가 존재하지 않습니다.');
         setPlaces([]);
       }
-    }, {category_group_code: "CE7"});
+    }, {category_group_code: CAFE_GROUP_CODE});
     setLoading(false);
   };
 
