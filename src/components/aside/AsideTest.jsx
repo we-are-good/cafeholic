@@ -1,21 +1,74 @@
 import { Link, Outlet } from 'react-router-dom';
 import * as S from '../../styles/aside';
-import useSearchHook from './SearchCustomHook';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeSearchText } from '../../shared/store/modules/search';
-
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
+// import { Map, MapMarker } from 'react-kakao-maps-sdk';
+const CAFE_GROUP_CODE = 'CE7';
 
 const Aside = () => {
   const dispatch = useDispatch();
-  const searchResults = useSelector((state) => state.search.searchResults);
-  const { keyword, setKeyword, places, search } = useSearchHook(); // 커스텀 훅 사용
+  const keyword = useSelector((state) => state.search);
+  const [places, setPlaces] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [map, setMap] = useState();
+  const [markers, setMarkers] = useState([]);
 
   // 검색 버튼을 클릭했을 때 실행되는 함수
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(changeSearchText(keyword)); // 검색어를 전역 상태로 업데이트
-    search(); //
+    // 검색어가 비어있는 경우 알림을 표시하고 함수를 종료합니다.
+    if (!keyword.trim()) {
+      alert('검색어를 입력해주세요!');
+      return;
+    }
+    setLoading(true);
+
+    const ps = new window.kakao.maps.services.Places();
+
+    ps.keywordSearch(keyword, (data, status) => {
+      if (status === window.kakao.maps.services.Status.OK) {
+        const bounds = new window.kakao.maps.LatLngBounds();
+
+        const filtereData = data.filter(
+          (place) => place.place_name.includes(keyword) && place.category_group_code === CAFE_GROUP_CODE
+        );
+
+        setPlaces(filtereData);
+        console.log('검색 후 카페 검색 결과:', filtereData);
+
+        const newMarkers = filtereData.map((place, index) => ({
+          position: new window.kakao.maps.LatLng(place.y, place.x),
+          title: place.place_name,
+          id: index
+        }));
+
+        for (var i = 0; i < Math.min(15, data.length); i++) {
+          newMarkers.push({
+            position: {
+              lat: data[i].y,
+              lng: data[i].x
+            },
+            content: data[i].place_name
+          });
+          bounds.extend(new window.kakao.maps.LatLng(data[i].y, data[i].x));
+        }
+        setMarkers(newMarkers);
+        map.setBounds(bounds);
+
+        console.log('검색 시 설정된 마커:', newMarkers);
+        dispatch(changeSearchText(keyword));
+      } else {
+        alert('검색 결과가 존재하지 않습니다.');
+        setPlaces([]);
+        setMarkers([]);
+      }
+    });
+    setLoading(false);
+  };
+
+  const handleKeywordChange = (e) => {
+    dispatch(changeSearchText(e.target.value));
   };
 
   return (
@@ -23,9 +76,11 @@ const Aside = () => {
       <S.Aside>
         <Link to="/">COFFEEHOLIC</Link>
         <div>
-          <form onSubmit={handleSubmit}>
-            <input type="text" value={keyword} onChange={(e) => setKeyword(e.target.value)} id="keyword" size="15" />
-            <button type="submit">검색</button>
+          <form onSubmit={handleSearch}>
+            <input type="text" value={keyword} onChange={handleKeywordChange} id="keyword" size="15" />
+            <button type="submit" disabled={loading}>
+              {loading ? '검색 중...' : '검색'}
+            </button>
           </form>
         </div>
         <div>
@@ -53,16 +108,6 @@ const Aside = () => {
               </li>
             ))}
           </ul>
-          {/* <Map
-            style={{ width: '100%', height: '400px' }}
-            center={new window.kakao.maps.LatLng(37.566826, 126.9786567)}
-            level={3}
-          > */}
-          {/* 검색된 장소의 마커를 지도에 표시합니다. */}
-          {/* {places.map((marker) => (
-              <MapMarker key={marker.id} position={marker.position} onClick={() => displayInfowindow(marker)} />
-            ))}
-          </Map> */}
         </div>
       </S.Aside>
       <Outlet />

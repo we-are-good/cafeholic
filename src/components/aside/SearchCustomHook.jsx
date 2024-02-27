@@ -1,15 +1,5 @@
-import { setSearchResults } from '../../shared/store/modules/search';
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-
-const useSearchHook = () => {
-  const [keyword, setKeyword] = useState('');
-  const [places, setPlaces] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [map, setMap] = useState();
-  const [marker, setMarkers] = useState();
-  const dispatch = useDispatch();
+function SearchCustomHook() {
+  return <div>SearchCustomHook</div>;
 
   const search = () => {
     setLoading(true);
@@ -62,6 +52,6 @@ const useSearchHook = () => {
     });
   };
   return { keyword, setKeyword, places, loading, search };
-};
+}
 
 export default useSearchHook;
