@@ -83,6 +83,7 @@ const Location = () => {
 
         if (status === window.kakao.maps.services.Status.OK) {
           const bounds = new window.kakao.maps.LatLngBounds();
+          //거색된 장소로 범위 재설정
           let newMarkers = [];
 
           for (var i = 0; i < Math.min(15, data.length); i++) {
