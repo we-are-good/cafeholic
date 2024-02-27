@@ -1,10 +1,8 @@
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addResults } from '../shared/store/modules/list';
 import LocationOver from './LocationOver';
 import { changeLocation, containSearchResults } from '../shared/store/modules/search';
-// import { connection } from '../shared/store/modules/listConnection';
 
 const Location = () => {
   const dispatch = useDispatch();
@@ -20,33 +18,19 @@ const Location = () => {
 
   const searchText = useSelector((state) => state.search.searchText);
 
-  // //카드 리스트 연결
-  // const selector = useSelector((state) => state.connection);
-  // console.log('selector', selector);
-
   const totalCafeList = useSelector((state) => state.search);
 
   const [selectedPlace, setSelectedPlace] = useState([]);
   const [info, setInfo] = useState();
   const [map, setMap] = useState();
   const [markers, setMarkers] = useState([]);
-  // const [location, setLocation] = useState({
-  //   center: {
-  //     lat: 37.566826,
-  //     lng: 126.9786567
-  //   },
-  //   errMsg: null
-  // });
 
   useEffect(() => {
     if (window.navigator.geolocation) {
       const watchId = window.navigator.geolocation.watchPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          // setLocation((prev) => ({
-          //   ...prev,
-          //   center: { lat: latitude, lng: longitude }
-          // }));
+
           dispatch(
             changeLocation({
               lat: latitude,
@@ -112,9 +96,7 @@ const Location = () => {
   //지도 드래그시 마커 변경
   const handleDragEnd = () => {
     const center = map.getCenter();
-    // setLocation({
-    //   center: { lat: center.getLat(), lng: center.getLng() }
-    // });
+
     dispatch(
       changeLocation({
         lat: center.getLat(),

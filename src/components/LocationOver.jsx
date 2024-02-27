@@ -29,7 +29,7 @@ function LocationOver({ selectedPlace, setSelectedPlace }) {
           </CafeTitle>
 
           <BodyWrapper>
-            <ImgWrapper>{/* <img src="null" width="73" height="70"> */}</ImgWrapper>
+            {/* <ImgWrapper>{/* <img src="null" width="73" height="70"> </ImgWrapper> */}
 
             <CafeAddressInfo>
               <Ellipsis> {address_name} </Ellipsis>
