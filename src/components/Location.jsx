@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import LocationOver from './LocationOver';
 import { changeLocation, containSearchResults } from '../shared/store/modules/search';
 import { connection } from '../shared/store/modules/listConnection';
+import { info } from '../shared/store/modules/info';
 
 const Location = () => {
   const dispatch = useDispatch();
@@ -13,19 +14,19 @@ const Location = () => {
 
   //검색기능
   const search = useSelector((state) => state.search);
-  // console.log('search', search);
 
   const location = useSelector((state) => state.search.location);
   const searchText = useSelector((state) => state.search.searchText);
   const totalCafeList = useSelector((state) => state.search);
 
   const [selectedPlace, setSelectedPlace] = useState([]);
-  const [info, setInfo] = useState();
+  const [infoState, setInfoState] = useState(); // 상태명 변경
   const [map, setMap] = useState();
   const [markers, setMarkers] = useState([]);
 
   //카드 리스트 연결
   const selector = useSelector((state) => state.connection);
+  const infoList = useSelector((state) => state.info);
   // console.log(selector);
 
   useEffect(() => {
@@ -88,7 +89,7 @@ const Location = () => {
 
           setMarkers(newMarkers);
           map.setBounds(bounds);
-          console.log('설정된 마커:', newMarkers);
+          // console.log('설정된 마커:', newMarkers);
         }
       },
       { category_group_code: 'CE7', location: new window.kakao.maps.LatLng(location.lat, location.lng), radius: 1000 }
@@ -109,12 +110,11 @@ const Location = () => {
 
   const selectedPlaceHandler = (marker) => {
     const getPlace = searchResults.find((location) => location.place_name === marker.content);
-    setInfo(marker);
     dispatch(connection(getPlace));
-    // setSelectedPlace(getPlace);
+    dispatch(info(getPlace));
+    setInfoState(marker);
   };
-  console.log('info', info);
-  console.log('markers', markers);
+
   return (
     <Map
       center={location}
@@ -128,10 +128,8 @@ const Location = () => {
     >
       {markers.map((marker) => (
         <MapMarker key={`marker-${marker.id}`} position={marker.position} onClick={() => selectedPlaceHandler(marker)}>
-          {/* {info && info.content === marker.content && selectedPlace && (
-            <ul>{<LocationOver selectedPlace={selectedPlace} setSelectedPlace={setSelectedPlace} />}</ul>
-          )} */}
-          {(info && info.content === marker.content && selector) || (!info && selector.id === marker.id && selector) ? (
+          {(infoList && infoList.content === marker.content && selector) ||
+          (infoList && selector.id === marker.id && selector) ? (
             <ul>{<LocationOver />}</ul>
           ) : null}
         </MapMarker>

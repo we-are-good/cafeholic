@@ -1,23 +1,19 @@
 import { useDispatch, useSelector } from 'react-redux';
 import * as S from '../styles/LocationOverStyle';
 import { connection } from '../shared/store/modules/listConnection';
+import { info } from '../shared/store/modules/info';
 
 function LocationOver() {
   const dispatch = useDispatch();
 
   const selector = useSelector((state) => state.connection);
 
-  // if (!selectedPlace || selectedPlace.length === 0) {
-  //   return null; // 선택된 장소가 없을 때 렌더링을 중지합니다.
-  // }
-
   const { place_name, place_url, address_name, road_address_name, phone } = selector;
-  // console.log(selector);
 
   // 커스텀 오버레이를 닫기 위해 호출되는 함수입니다
   const closeOverlay = () => {
-    // setSelectedPlace('');
     dispatch(connection(''));
+    dispatch(info(''));
   };
   return (
     <>
@@ -27,7 +23,6 @@ function LocationOver() {
             {place_name}
             <S.CloseButton onClick={closeOverlay} />
           </S.CafeTitle>
-
           <S.BodyWrapper>
             <S.CafeAddressInfo>
               <S.Ellipsis>{address_name}</S.Ellipsis>

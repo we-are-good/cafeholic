@@ -4,6 +4,7 @@ import { changeSearchText } from '../shared/store/modules/search';
 import { useSearchParams } from 'react-router-dom';
 import * as S from '../styles/common';
 import { connection } from '../shared/store/modules/listConnection';
+import { info } from '../shared/store/modules/info';
 
 const Search = () => {
   const dispatch = useDispatch();
@@ -15,7 +16,6 @@ const Search = () => {
   // console.log(keyword);
 
   const searchText = useSelector((state) => state.search.searchText);
-
   const searchResults = useSelector((state) => state.search.searchResults);
 
   const { kakao } = window;
@@ -29,14 +29,8 @@ const Search = () => {
   };
 
   const handleClickCard = (place) => {
-    // dispatch(
-    //   connection({
-    //     selectedplace: place
-    //   })
-    // );
-
     dispatch(connection(place));
-    console.log(place);
+    dispatch(info(place));
   };
 
   return (
