@@ -29,13 +29,14 @@ const Search = () => {
   };
 
   const handleClickCard = (place) => {
-    dispatch(
-      connection({
-        name: place.place_name,
-        isClick: true,
-        id: place.id
-      })
-    );
+    // dispatch(
+    //   connection({
+    //     selectedplace: place
+    //   })
+    // );
+
+    dispatch(connection(place));
+    console.log(place);
   };
 
   return (

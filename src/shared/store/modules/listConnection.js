@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const connectionList = createSlice({
   name: 'connection',
   initialState: {
-    name: '',
-    isClick: false
+    selectedplace: '',
+    info: ''
   },
   reducers: {
     connection: (state, action) => {
