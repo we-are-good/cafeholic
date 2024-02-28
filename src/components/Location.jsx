@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import LocationOver from './LocationOver';
 import { changeLocation, containSearchResults } from '../shared/store/modules/search';
+import { connection } from '../shared/store/modules/listConnection';
 
 const Location = () => {
   const dispatch = useDispatch();
@@ -107,11 +108,13 @@ const Location = () => {
   };
 
   const selectedPlaceHandler = (marker) => {
-    const getPlace = searchResults.filter((location) => location.place_name === marker.content);
+    const getPlace = searchResults.find((location) => location.place_name === marker.content);
     setInfo(marker);
-    setSelectedPlace(getPlace);
+    dispatch(connection(getPlace));
+    // setSelectedPlace(getPlace);
   };
-
+  console.log('info', info);
+  console.log('markers', markers);
   return (
     <Map
       center={location}
@@ -123,11 +126,14 @@ const Location = () => {
       onCreate={setMap}
       onDragEnd={handleDragEnd}
     >
-      {markers.map((marker, index) => (
-        <MapMarker key={`marker-${index}`} position={marker.position} onClick={() => selectedPlaceHandler(marker)}>
-          {info && info.content === marker.content && selectedPlace && (
+      {markers.map((marker) => (
+        <MapMarker key={`marker-${marker.id}`} position={marker.position} onClick={() => selectedPlaceHandler(marker)}>
+          {/* {info && info.content === marker.content && selectedPlace && (
             <ul>{<LocationOver selectedPlace={selectedPlace} setSelectedPlace={setSelectedPlace} />}</ul>
-          )}
+          )} */}
+          {(info && info.content === marker.content && selector) || (!info && selector.id === marker.id && selector) ? (
+            <ul>{<LocationOver />}</ul>
+          ) : null}
         </MapMarker>
       ))}
     </Map>
