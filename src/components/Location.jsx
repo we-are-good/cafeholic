@@ -68,7 +68,7 @@ const Location = () => {
 
         if (status === window.kakao.maps.services.Status.OK) {
           const bounds = new window.kakao.maps.LatLngBounds();
-          //거색된 장소로 범위 재설정
+          //검색된 장소로 범위 재설정
           let newMarkers = [];
 
           for (var i = 0; i < Math.min(15, data.length); i++) {
@@ -112,12 +112,6 @@ const Location = () => {
     setSelectedPlace(getPlace);
   };
 
-  // useEffect(() => {
-  //   if (!selector.isClick) return;
-  //   const getPlace = searchResults.find((location) => location.id === selector.id);
-  //   setSelectedPlace(getPlace);
-  // }, [selector.isClick, selector.id, searchResults]);
-
   return (
     <Map
       center={location}
@@ -134,10 +128,6 @@ const Location = () => {
           {info && info.content === marker.content && selectedPlace && (
             <ul>{<LocationOver selectedPlace={selectedPlace} setSelectedPlace={setSelectedPlace} />}</ul>
           )}
-          {/* {((info && info.content === marker.content) || (selector.isClick && selector.id === marker.id)) &&
-            selectedPlace && (
-              <ul>{<LocationOver selectedPlace={selectedPlace} setSelectedPlace={setSelectedPlace} />}</ul>
-            )} */}
         </MapMarker>
       ))}
     </Map>
