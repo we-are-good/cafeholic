@@ -93,7 +93,6 @@ export const SearchButton = styled.button`
 `;
 
 /*------------ List ----------*/
-
 export const ListDiv = styled.div`
   padding: 10px;
   margin: 10px;
@@ -115,11 +114,13 @@ export const ListDiv = styled.div`
 export const ListUl = styled.ul``;
 
 export const ListLi = styled.li`
-  padding: 20px 10px;
+  padding: 20px;
   border-radius: 5px;
-  box-shadow: 3px 4px #deba9d;
+  box-shadow: 4px 5px 3px#deba9d;
   margin-bottom: 16px;
   background-color: white;
+  cursor: pointer;
+  margin-right: 20px;
 `;
 
 export const PlaceDiv = styled.div``;
@@ -143,4 +144,8 @@ export const PlaceNewAddress = styled.span`
 export const PlaceOldAddress = styled.span`
   font-size: 13px;
   color: dimgray;
+`;
+
+export const PlaceTel = styled.span`
+  font-size: 14px;
 `;

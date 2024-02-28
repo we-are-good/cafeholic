@@ -8,22 +8,24 @@ const Location = () => {
   const dispatch = useDispatch();
 
   const searchResults = useSelector((state) => state.search.searchResults);
-  console.log('searchResults', searchResults);
+  // console.log('searchResults', searchResults);
 
   //검색기능
   const search = useSelector((state) => state.search);
-  console.log('search', search);
+  // console.log('search', search);
 
   const location = useSelector((state) => state.search.location);
-
   const searchText = useSelector((state) => state.search.searchText);
-
   const totalCafeList = useSelector((state) => state.search);
 
   const [selectedPlace, setSelectedPlace] = useState([]);
   const [info, setInfo] = useState();
   const [map, setMap] = useState();
   const [markers, setMarkers] = useState([]);
+
+  //카드 리스트 연결
+  const selector = useSelector((state) => state.connection);
+  // console.log(selector);
 
   useEffect(() => {
     if (window.navigator.geolocation) {
@@ -59,7 +61,6 @@ const Location = () => {
     ps.keywordSearch(
       searchText,
       (data, status) => {
-        console.log('카페 검색 결과:', data);
         if (!Array.isArray(data)) {
           return;
         }
@@ -111,7 +112,12 @@ const Location = () => {
     setSelectedPlace(getPlace);
   };
 
-  console.log('totalCafeList', totalCafeList);
+  // useEffect(() => {
+  //   if (!selector.isClick) return;
+  //   const getPlace = searchResults.find((location) => location.id === selector.id);
+  //   setSelectedPlace(getPlace);
+  // }, [selector.isClick, selector.id, searchResults]);
+
   return (
     <Map
       center={location}
@@ -126,8 +132,12 @@ const Location = () => {
       {markers.map((marker, index) => (
         <MapMarker key={`marker-${index}`} position={marker.position} onClick={() => selectedPlaceHandler(marker)}>
           {info && info.content === marker.content && selectedPlace && (
-            <div>{<LocationOver selectedPlace={selectedPlace} setSelectedPlace={setSelectedPlace} />}</div>
+            <ul>{<LocationOver selectedPlace={selectedPlace} setSelectedPlace={setSelectedPlace} />}</ul>
           )}
+          {/* {((info && info.content === marker.content) || (selector.isClick && selector.id === marker.id)) &&
+            selectedPlace && (
+              <ul>{<LocationOver selectedPlace={selectedPlace} setSelectedPlace={setSelectedPlace} />}</ul>
+            )} */}
         </MapMarker>
       ))}
     </Map>

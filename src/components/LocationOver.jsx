@@ -1,16 +1,10 @@
-import {
-  ArticleWrapper,
-  BodyWrapper,
-  CafeAddressInfo,
-  CafeInfo,
-  CafeTitle,
-  CloseButton,
-  Ellipsis,
-  Jibun,
-  LinkWrapper
-} from '../styles/LocationOverStyle';
+import * as S from '../styles/LocationOverStyle';
 
 function LocationOver({ selectedPlace, setSelectedPlace }) {
+  if (!selectedPlace || selectedPlace.length === 0) {
+    return null; // 선택된 장소가 없을 때 렌더링을 중지합니다.
+  }
+
   const { place_name, place_url, address_name, road_address_name, phone } = selectedPlace[0];
   console.log(selectedPlace);
 
@@ -20,27 +14,27 @@ function LocationOver({ selectedPlace, setSelectedPlace }) {
   };
   return (
     <>
-      <ArticleWrapper>
-        <CafeInfo>
-          <CafeTitle>
+      <S.ArticleWrapper>
+        <S.CafeInfo>
+          <S.CafeTitle>
             {place_name}
-            <CloseButton onClick={closeOverlay}> </CloseButton>
-          </CafeTitle>
+            <S.CloseButton onClick={closeOverlay} />
+          </S.CafeTitle>
 
-          <BodyWrapper>
-            <CafeAddressInfo>
-              <Ellipsis> {address_name} </Ellipsis>
-              <Jibun> {road_address_name} </Jibun>
-              <LinkWrapper>
-                <div>{phone}</div>
+          <S.BodyWrapper>
+            <S.CafeAddressInfo>
+              <S.Ellipsis>{address_name}</S.Ellipsis>
+              <S.LinkWrapper>
+                <S.Jibun>{road_address_name}</S.Jibun>
+                <p>{phone}</p>
                 <a href={place_url} target="_blank">
                   홈페이지
                 </a>
-              </LinkWrapper>
-            </CafeAddressInfo>
-          </BodyWrapper>
-        </CafeInfo>
-      </ArticleWrapper>
+              </S.LinkWrapper>
+            </S.CafeAddressInfo>
+          </S.BodyWrapper>
+        </S.CafeInfo>
+      </S.ArticleWrapper>
     </>
   );
 }
