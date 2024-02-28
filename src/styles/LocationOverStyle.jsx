@@ -25,9 +25,9 @@ export const CafeInfo = styled.header`
 `;
 
 export const CafeTitle = styled.div`
-  padding: 5px 0 0 10px;
+  padding: 5px 0 30px 9px;
   height: 30px;
-  background: #eee;
+  background: #ffe4a0;
   border-bottom: 1px solid #ddd;
   font-size: 18px;
   font-weight: bold;
@@ -55,14 +55,16 @@ export const BodyWrapper = styled.body`
 
 export const CafeAddressInfo = styled.div`
   position: relative;
-  margin: 13px 0 0 90px;
+  margin: 15px 0 0 10px;
   height: 75px;
 `;
 
 export const Ellipsis = styled.div`
+  font-size: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  padding-bottom: 10px;
 `;
 
 export const Jibun = styled.div`

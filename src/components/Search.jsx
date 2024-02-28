@@ -1,23 +1,17 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
 import { changeSearchText } from '../shared/store/modules/search';
-
-const CAFE_GROUP_CODE = 'CE7';
+import { useSearchParams } from 'react-router-dom';
+import * as S from '../styles/common';
 
 const Search = () => {
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
-  //const [places, setPlaces] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [map, setMap] = useState();
-  const [markers, setMarkers] = useState([]);
 
   const keyword = searchParams.get('keyword');
   console.log(keyword);
-
-  const location = useSelector((state) => state.search.location);
 
   const searchText = useSelector((state) => state.search.searchText);
 
@@ -34,9 +28,9 @@ const Search = () => {
   };
   return (
     <>
-      <div>
+      <S.SearchDiv>
         <form onSubmit={handleSearch}>
-          <input
+          <S.SearchInput
             type="text"
             value={searchText}
             onChange={handleKeywordChange}
@@ -44,37 +38,37 @@ const Search = () => {
             size="15"
             placeholder="검색어를 입력하세요."
           />
-          <button type="submit" disabled={loading}>
+          <S.SearchButton type="submit" disabled={loading}>
             {loading ? '검색 중...' : '검색'}
-          </button>
+          </S.SearchButton>
         </form>
-      </div>
-      <div>
-        <ul>
+      </S.SearchDiv>
+      <S.ListDiv>
+        <S.ListUl>
           {searchResults.map((place, index) => (
-            <li key={index}>
+            <S.ListLi key={index}>
               <span className={`markerbg marker_${index + 1}`}></span>
-              <div className="info">
-                <h5>{place.place_name}</h5>
+              <S.PlaceDiv className="info">
+                <S.PlaceName>{place.place_name}</S.PlaceName>
                 {/* 도로명 주소와 지번 주소가 있는 경우 각각 출력합니다. */}
-                <p>
+                <S.Placecontents>
                   {place.road_address_name && (
                     <>
-                      <span>{place.road_address_name}</span>
+                      <S.PlaceNewAddress>{place.road_address_name}</S.PlaceNewAddress>
                       <br />
-                      <span className="jibun gray">{`(${place.address_name})`}</span>
+                      <S.PlaceOldAddress className="jibun gray">{`(${place.address_name})`}</S.PlaceOldAddress>
                     </>
                   )}
-                </p>
+                </S.Placecontents>
                 {/* 도로명 주소만 있는 경우 출력합니다. */}
                 {!place.road_address_name && <span>{place.address_name}</span>}
                 {/* 전화번호 출력 */}
-                <span className="tel">{place.phone}</span>
-              </div>
-            </li>
+                <span className="tel">{`☎️ ${place.phone}`}</span>
+              </S.PlaceDiv>
+            </S.ListLi>
           ))}
-        </ul>
-      </div>
+        </S.ListUl>
+      </S.ListDiv>
     </>
   );
 };
