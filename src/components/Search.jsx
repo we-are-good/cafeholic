@@ -1,31 +1,31 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeSearchText } from '../shared/store/modules/search';
-import { useSearchParams } from 'react-router-dom';
 import * as S from '../styles/common';
 import { connection } from '../shared/store/modules/listConnection';
 import { info } from '../shared/store/modules/info';
 
 const Search = () => {
-  const dispatch = useDispatch();
-
   const [loading, setLoading] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState('');
 
-  // const keyword = searchParams.get('keyword');
-  // console.log(keyword);
-
-  const searchText = useSelector((state) => state.search.searchText);
+  const dispatch = useDispatch();
   const searchResults = useSelector((state) => state.search.searchResults);
 
-  const { kakao } = window;
-
   const handleKeywordChange = (e) => {
-    dispatch(changeSearchText(e.target.value));
+    setSearch(e.target.value);
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
+    setLoading(true);
+    try {
+      dispatch(changeSearchText(search));
+    } catch {
+      console.error(Error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleClickCard = (place) => {
@@ -36,10 +36,10 @@ const Search = () => {
   return (
     <>
       <S.SearchDiv>
-        <form onSubmit={handleSearch}>
+        <form onSubmit={(e) => handleSearch(e)}>
           <S.SearchInput
             type="text"
-            value={searchText}
+            value={search}
             onChange={handleKeywordChange}
             id="keyword"
             size="15"
@@ -59,10 +59,9 @@ const Search = () => {
                 handleClickCard(place);
               }}
             >
-              <span className={`markerbg marker_${index + 1}`}></span>
               <S.PlaceDiv className="info">
                 <S.PlaceName>{place.place_name}</S.PlaceName>
-                {/* 도로명 주소와 지번 주소가 있는 경우 각각 출력합니다. */}
+                {/* 도로명 주소와 지번 주소가 있는 경우*/}
                 <S.Placecontents>
                   {place.road_address_name && (
                     <>
@@ -72,11 +71,9 @@ const Search = () => {
                     </>
                   )}
                 </S.Placecontents>
-                {/* 도로명 주소만 있는 경우 출력합니다. */}
+                {/* 도로명 주소만 있는 경우*/}
                 {!place.road_address_name && <span>{place.address_name}</span>}
-                {/* 전화번호 출력 */}
                 {place.phone ? <S.PlaceTel>{`☎ ${place.phone}`}</S.PlaceTel> : null}
-                {/* <S.PlaceTel>{`☎ ${place.phone}`}</S.PlaceTel> */}
               </S.PlaceDiv>
             </S.ListLi>
           ))}

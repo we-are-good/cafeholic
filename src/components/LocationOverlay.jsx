@@ -5,9 +5,7 @@ import { info } from '../shared/store/modules/info';
 
 function LocationOver() {
   const dispatch = useDispatch();
-
   const selector = useSelector((state) => state.connection);
-
   const { place_name, place_url, address_name, road_address_name, phone } = selector;
 
   // 커스텀 오버레이를 닫기 위해 호출되는 함수입니다
