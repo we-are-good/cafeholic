@@ -10,7 +10,9 @@
 ### 개발 환경 및 도구
 
 - Vite (React)
-- (배포)
+- Javascript
+- Styled-CSS
+- Vercel(배포)
 
 ## ⚙️ 개발 기간
 
