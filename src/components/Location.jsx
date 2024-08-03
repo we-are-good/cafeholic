@@ -1,7 +1,7 @@
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import LocationOver from './LocationOver';
+import LocationOverlay from './LocationOverlay';
 import { changeLocation, containSearchResults } from '../shared/store/modules/search';
 import { connection } from '../shared/store/modules/listConnection';
 import { info } from '../shared/store/modules/info';
@@ -130,7 +130,7 @@ const Location = () => {
         <MapMarker key={`marker-${marker.id}`} position={marker.position} onClick={() => selectedPlaceHandler(marker)}>
           {(infoList && infoList.content === marker.content && selector) ||
           (infoList && selector.id === marker.id && selector) ? (
-            <ul>{<LocationOver />}</ul>
+            <ul>{<LocationOverlay />}</ul>
           ) : null}
         </MapMarker>
       ))}
